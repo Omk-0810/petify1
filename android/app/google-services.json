@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "346679821193",
+    "project_id": "petify-794fd",
+    "storage_bucket": "petify-794fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346679821193:android:5d61e5fc5310484712d758",
+        "android_client_info": {
+          "package_name": "com.example.petify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl6GrOJ5wItmm91jSH-BxgaBzHMx1j8WQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

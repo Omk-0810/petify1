@@ -9,6 +9,8 @@ import 'package:petify/dashboard/dog_adopt.dart';
 import 'package:petify/dashboard/cat_adopt.dart';
 import 'package:petify/dashboard/donation.dart';
 import 'package:petify/profile/profile_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 
 
@@ -22,6 +24,28 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
+  final _firestore = FirebaseFirestore.instance;
+  List<Pet> pets = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPets(); // Call data fetching function on initialization
+  }
+
+
+  Future<void> _fetchPets() async {
+    // Stream to listen for changes in the pets collection
+    Stream<QuerySnapshot<Map<String, dynamic>>> petsStream =
+    _firestore.collection('pets').snapshots();
+
+    // Listen to the stream and update the pets list
+    petsStream.listen((snapshot) {
+      pets = snapshot.docs.map((doc) => Pet.fromMap(doc.data())).toList();
+      setState(() {}); // Update UI when pets list changes
+    });
+  }
+
 
   signout() async {
     await FirebaseAuth.instance.signOut();
@@ -288,18 +312,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: dogs.length+ cats.length,
+                  itemCount: pets.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context,index){
+                    Pet pet = pets[index];
+                    return buildPetContainer(pet);
+                    // if (index < dogs.length) {
+                    //  Pet pet = dogs[index];
+                    //  return buildPetContainer(pet);
+                    // } else {
+                    //   int catIndex = index - dogs.length;
+                    //   Pet pet = cats[catIndex];
+                    //   return buildPetContainer(pet);
+                    // }
 
-                    if (index < dogs.length) {
-                     Pet pet = dogs[index];
-                     return buildPetContainer(pet);
-                    } else {
-                      int catIndex = index - dogs.length;
-                      Pet pet = cats[catIndex];
-                      return buildPetContainer(pet);
-                    }
 
 
 
@@ -327,82 +353,81 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       margin:EdgeInsets.symmetric(horizontal: 20),
 
-        child: Row(
-          children: [
-            Expanded(child: Stack(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  height:200,
+      child: Row(
+        children: [
+          Expanded(child: Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                height:200,
+                decoration: BoxDecoration(color: Colors.transparent,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomLeft: Radius.circular(20)
+                    )
+                ),
+                child: Align(
 
-                  decoration: BoxDecoration(color: Colors.blueGrey,
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0),
-                        bottomLeft: Radius.circular(20.0),),
-
-                  ),
-                  child: Align(
-
-                    child:Image.asset(pet.imageUrl,height: 180,width: 180,fit: BoxFit.cover,),
-
-                  ),
-
+                  child:Image.network(pet.imageUrl,height: 180,width: 180,fit: BoxFit.cover,),
 
                 ),
 
 
-              ],
+              ),
 
-            )),
 
-            Expanded(child: Stack(
-              children: [
-                Container(
-                    height:200,
-                  width: 200,
+            ],
+
+          )),
+          Expanded(child: Stack(
+            children: [
+              Container(
+                  height:200,
+                  width: 150,
                   margin: EdgeInsets.only(top:40,bottom: 20),
-                  decoration: BoxDecoration(color: Colors.blueGrey,
+                  decoration: BoxDecoration(color: Colors.white,
 
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(20),
                           bottomRight: Radius.circular(20)
                       )),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
 
-                      children: [
-                        SizedBox(height: 30),
-                        Text(
-                          pet.name,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    children: [
+                      SizedBox(height: 30),
+                      Text(
+                        pet.name,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          "${pet.age} years old",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "${pet.age} years old",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          pet.breed,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        pet.breed,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
                         ),
-                      ],
-                    )
-                ),
+                      ),
+                    ],
+                  )
+              ),
 
-              ],
-            ))
-          ],
-        ),
+            ],
+          ))
+        ],
+      ),
 
     );}
 }

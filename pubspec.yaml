@@ -38,7 +38,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_native_splash: ^2.3.10
   firebase_core: ^2.25.5
+  permission_handler: ^11.3.0
   firebase_auth: ^4.17.6
+  cloud_firestore: ^4.15.8
+  firebase_database: ^10.4.9
+  firebase_storage: ^11.6.9
   get: ^4.6.6
   google_fonts: ^6.2.1
   image_picker: ^1.0.7

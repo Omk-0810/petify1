@@ -1,35 +1,61 @@
+import 'dart:ffi';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:petify/dashboard/onBoarding.dart';
 
 class PetInformationForm extends StatefulWidget {
+
   @override
   _PetInformationFormState createState() => _PetInformationFormState();
 }
 
 class _PetInformationFormState extends State<PetInformationForm> {
+  String? currentUserId ;
+  final CollectionReference _items=FirebaseFirestore.instance.collection('pets');
+
+  final _firestore = FirebaseFirestore.instance;
   String _petName = '';
+  String _species = '';
   String _petBreed = '';
   String _gender = '';
   int _age = 0;
   File? _image;
+  String imageUrl='';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Future<void> _getImage() async {
-    final _picker = ImagePicker();
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  XFile? pickedFile;
 
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
+
+
+  void initState() {
+    super.initState();
+    currentUserId = FirebaseAuth.instance.currentUser?.uid;
   }
+
+  // Future<void> _getImage()
+  void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    runApp(MaterialApp(
+      home: PetInformationForm(),
+    ));
+  }
+  // Future<String?> uploadImage(XFile? pickedFile) async {
+  //
+  // }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +110,59 @@ class _PetInformationFormState extends State<PetInformationForm> {
                   });
                 },
               ),
+              SizedBox(height: 15,),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Opacity(
+                    opacity: 0.8,
+                    child: Text(
+                      "Please select the species of your pet :",
+                      style: TextStyle(fontSize: 17.0), // Adjust text style as needed
+                    ),
+                  ),
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [ Expanded(
+                    child: ListTile(
+                       title: Opacity(opacity:0.8,child: const Text('Male')),
+                       leading: Radio<String>(
+                         value: 'Dog',
+                         groupValue: _species,
+                         onChanged: (String? value) {
+                           setState(() {
+                             _species = value!;
+                           });
+                         },
+                       ),
+                     ),
+                  ),
+
+                   Expanded(
+                     child: ListTile(
+                       title: Opacity(opacity:0.8,child: const Text('Female')),
+                       leading: Radio<String>(
+                         value: 'Cat',
+                         groupValue: _species,
+                         onChanged: (String? value) {
+                           setState(() {
+                             _species = value!;
+                           });
+                         },
+                       ),
+                     ),
+                   ),
+                  ]
+                 )
+                ],
+              ),
+              Container(
+                height: 1, // Adjust height as needed
+                color: Colors.black45, // Adjust color for boldness
+                margin: EdgeInsets.symmetric(horizontal: 10.0), // Adjust margins as needed
+              ),
+
               TextFormField(
                 decoration: InputDecoration(labelText: 'Pet Breed'),
                 validator: (value) {
@@ -98,22 +177,61 @@ class _PetInformationFormState extends State<PetInformationForm> {
                   });
                 },
               ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Gender'),
-                validator: (value) {
-                  if (value?.isEmpty ?? true) {
-                    return 'Please enter gender';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() {
-                    _gender = value;
-                  });
-                },
+              SizedBox(height: 10,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Opacity(
+                    opacity: 0.8,
+                    child: Text(
+                      "Select the Gender :",
+                      style: TextStyle(fontSize: 16.0), // Adjust text style as needed
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ListTile(
+                        title: Opacity(opacity:0.8,child: const Text('Male')),
+                        leading: Radio<String>(
+                          value: 'Male',
+                          groupValue: _gender,
+                          onChanged: (String? value) {
+                            setState(() {
+                              _gender = value!;
+                            });
+                          },
+                        ),
+                                            ),
+                      ),
+                  
+
+                  Expanded(
+                    child: ListTile(
+                      title: Opacity(opacity:0.8,child: const Text('Female')),
+                      leading: Radio<String>(
+                        value: 'Female',
+                        groupValue: _gender,
+                        onChanged: (String? value) {
+                          setState(() {
+                            _gender = value!;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                   ]
+                 )
+    
+                ],
+              ),
+              Container(
+                height: 1, // Adjust height as needed
+                color: Colors.black45, // Adjust color for boldness
+                margin: EdgeInsets.symmetric(horizontal: 10.0), // Adjust margins as needed
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Age'),
+                decoration: InputDecoration(labelText: 'Age (In months)'),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return 'Please enter age';
@@ -140,7 +258,41 @@ class _PetInformationFormState extends State<PetInformationForm> {
                     Text('Upload the image of the pet',style: TextStyle(fontSize: 15),),
                     Spacer(),
                     IconButton(
-                      onPressed: _getImage,
+                      onPressed: () async {
+                        XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                        print('${pickedFile?.path}');
+
+
+                          if (pickedFile != null) {
+                            _image = File(pickedFile.path);
+                          } else {
+                            print('No image selected.');
+                          }
+
+                        Reference referenceRoot = FirebaseStorage.instance.ref();
+                        Reference referenceDirImages = referenceRoot.child('images');
+
+                        Reference referenceImageToUpload = referenceDirImages.child(
+                            'pet_images/${DateTime
+                                .now()
+                                .millisecondsSinceEpoch}');
+
+
+                        try {
+                          await referenceImageToUpload.putFile(File(pickedFile!.path));
+                          imageUrl=await referenceImageToUpload.getDownloadURL();
+                        }
+
+                        on FirebaseException catch (e) {
+                          // Handle image upload errors
+                          print(e);
+                          Get.snackbar("Error", "Failed to upload image: ${e.message}",);
+                          return null;
+                        }
+                        Get.snackbar('Success', 'Image uploaded successfully');
+
+
+                      },
 
                         icon: Image.asset('assets/images/upload.png'),
                     ),
@@ -160,15 +312,46 @@ class _PetInformationFormState extends State<PetInformationForm> {
               )
               :SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // You can process the form data here, for example, send it to an API
-                    print('Pet Name: $_petName');
-                    print('Pet Breed: $_petBreed');
-                    print('Gender: $_gender');
-                    print('Age: $_age');
-                    print('Image Path: ${_image?.path}');
+                onPressed: () async {
+                  print(imageUrl);
+                  if (imageUrl.isEmpty) {
+                    Get.snackbar('Error', 'please upload an image');
+                    return;
                   }
+                  try {
+
+                      // Add data to Firebase Firestore
+                      await FirebaseFirestore.instance.collection('pets').add({
+                        'userId':currentUserId,
+                        'petName': _petName,
+                        'species':_species,
+                        'petBreed': _petBreed,
+                        'gender': _gender,
+                        'age': _age,
+                        'imageUrl': imageUrl,
+                      });
+
+                      showDialog(
+                        context: context,
+                        builder:(BuildContext context) {
+                          return AlertDialog(
+                            content: Text('Details submitted successfully!!!'),
+                            actions: [TextButton(onPressed: () {
+                              Navigator.of(context).pop();
+                              Get.back();
+                            },
+                                child: Text('OK'))
+                            ],
+                          );
+
+                        }
+                      ) ;// Navigate to next screen
+                    } catch (e) {
+                      // Handle errors
+                      print(e);
+                      // Display error message to the user
+                    }
+
                 },
                 child: Text('Submit'),
               ),
@@ -179,9 +362,9 @@ class _PetInformationFormState extends State<PetInformationForm> {
     );
   }
 }
-
-void main() {
-  runApp(MaterialApp(
-    home: PetInformationForm(),
-  ));
-}
+//
+// void main() {
+//   runApp(MaterialApp(
+//     home: PetInformationForm(),
+//   ));
+// }

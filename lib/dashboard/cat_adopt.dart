@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:petify/model/pet_model.dart';
 import 'package:petify/dashboard/onBoarding.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CatAdopt extends StatefulWidget {
   const CatAdopt({super.key});
@@ -13,17 +14,36 @@ class CatAdopt extends StatefulWidget {
 }
 
 class _CatAdoptState extends State<CatAdopt> {
+  final _firestore = FirebaseFirestore.instance;
   final user = FirebaseAuth.instance.currentUser;
+  List<Pet> pets = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getCats(); // Call data fetching function on initialization
+  }
+
+  Future<void> _getCats() async {
+    Stream<QuerySnapshot<Map<String, dynamic>>> petsStream =
+    _firestore.collection('pets').where('species'.toLowerCase(),isEqualTo:'Cat').snapshots();
+
+    // Listen to the stream and update the pets list
+    petsStream.listen((snapshot) {
+      pets = snapshot.docs.map((doc) => Pet.fromMap(doc.data())).toList();
+      setState(() {});
+      // Update UI when pets list changes
+    });
+  }
+
 
   signout() async {
     await FirebaseAuth.instance.signOut();
   }
 
-  // final Pet pet;
 
   @override
   Widget build(BuildContext context) {
-    final size=MediaQuery.of(context).size;
     Widget imageIcon = Image.asset('assets/images/profile.webp');
     return Scaffold(
       appBar: AppBar(
@@ -85,7 +105,7 @@ class _CatAdoptState extends State<CatAdopt> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Dogs',
+                      'Cats',
                       style: TextStyle(
                           fontSize: 14, color: Colors.black.withOpacity(0.6)),
                     ),
@@ -93,27 +113,41 @@ class _CatAdoptState extends State<CatAdopt> {
                 ),
               ),
 
-              Stack(children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: cats.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context,index){
-                    Pet pet = cats[index];
-                    return buildPetContainer(pet);
-                  },
-                )
+          Stack(children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: pets.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context,index){
+                Pet pet = pets[index];
+                return buildPetContainer(pet);
+                // if (index < dogs.length) {
+                //  Pet pet = dogs[index];
+                //  return buildPetContainer(pet);
+                // } else {
+                //   int catIndex = index - dogs.length;
+                //   Pet pet = cats[catIndex];
+                //   return buildPetContainer(pet);
+                // }
 
 
-              ]
-              ),
 
-            ],
+
+              },
+            )
+
+
+          ]
+
+
           ),
+          ],
         ),
       ),
 
+
+    )
 
     );
   }
@@ -130,12 +164,15 @@ class _CatAdoptState extends State<CatAdopt> {
               Container(
                 margin: EdgeInsets.only(top: 20),
                 height:200,
-                decoration: BoxDecoration(color: Colors.blueGrey,
-                    borderRadius: BorderRadius.circular(20)
+                decoration: BoxDecoration(color: Colors.transparent,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomLeft: Radius.circular(20)
+                    )
                 ),
                 child: Align(
 
-                  child:Image.asset(pet.imageUrl,height: 180,width: 180,),
+                  child:Image.network(pet.imageUrl,height: 180,width: 180,fit: BoxFit.cover,),
 
                 ),
 
@@ -146,7 +183,6 @@ class _CatAdoptState extends State<CatAdopt> {
             ],
 
           )),
-          SizedBox(width: 5),
           Expanded(child: Stack(
             children: [
               Container(
@@ -160,7 +196,7 @@ class _CatAdoptState extends State<CatAdopt> {
                           bottomRight: Radius.circular(20)
                       )),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
 
                     children: [
                       SizedBox(height: 30),

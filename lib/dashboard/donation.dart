@@ -1,18 +1,15 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:petify/dashboard/onBoarding.dart';
+import 'package:petify/profile/profile_page.dart';
 
 class PetInformationForm extends StatefulWidget {
 
@@ -83,8 +80,10 @@ class _PetInformationFormState extends State<PetInformationForm> {
                 borderRadius: BorderRadius.circular(10), color: Colors.white70),
             child: IconButton(
               onPressed: () {
-                Get.snackbar("Profile Clicked!", "");
-              },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfileScreen()),
+                );              },
               icon: Image.asset('assets/images/profile.webp'),
             ),
           )
@@ -97,7 +96,7 @@ class _PetInformationFormState extends State<PetInformationForm> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Pet Name'),
+                decoration: InputDecoration(labelText: 'Pet Name',prefixIcon:Icon (Icons.pets_outlined)),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return 'Please enter pet name';
@@ -110,13 +109,13 @@ class _PetInformationFormState extends State<PetInformationForm> {
                   });
                 },
               ),
-              SizedBox(height: 15,),
+              SizedBox(height: 20,),
 
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Opacity(
-                    opacity: 0.8,
+                    opacity: 0.5,
                     child: Text(
                       "Please select the species of your pet :",
                       style: TextStyle(fontSize: 17.0), // Adjust text style as needed
@@ -126,7 +125,7 @@ class _PetInformationFormState extends State<PetInformationForm> {
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [ Expanded(
                     child: ListTile(
-                       title: Opacity(opacity:0.8,child: const Text('Male')),
+                       title: Opacity(opacity:0.8,child: const Text('Dog')),
                        leading: Radio<String>(
                          value: 'Dog',
                          groupValue: _species,
@@ -141,7 +140,7 @@ class _PetInformationFormState extends State<PetInformationForm> {
 
                    Expanded(
                      child: ListTile(
-                       title: Opacity(opacity:0.8,child: const Text('Female')),
+                       title: Opacity(opacity:0.8,child: const Text('Cat')),
                        leading: Radio<String>(
                          value: 'Cat',
                          groupValue: _species,
@@ -164,7 +163,8 @@ class _PetInformationFormState extends State<PetInformationForm> {
               ),
 
               TextFormField(
-                decoration: InputDecoration(labelText: 'Pet Breed'),
+                decoration: InputDecoration(labelText: 'Pet Breed',prefixIcon: Icon(Icons.category_rounded)),
+
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return 'Please enter pet breed';
@@ -182,7 +182,7 @@ class _PetInformationFormState extends State<PetInformationForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Opacity(
-                    opacity: 0.8,
+                    opacity: 0.5,
                     child: Text(
                       "Select the Gender :",
                       style: TextStyle(fontSize: 16.0), // Adjust text style as needed
@@ -231,7 +231,7 @@ class _PetInformationFormState extends State<PetInformationForm> {
                 margin: EdgeInsets.symmetric(horizontal: 10.0), // Adjust margins as needed
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Age (In months)'),
+                decoration: InputDecoration(labelText: 'Age (In months)',prefixIcon: Icon(Icons.format_list_numbered_rtl_outlined)),
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
                     return 'Please enter age';
@@ -255,7 +255,7 @@ class _PetInformationFormState extends State<PetInformationForm> {
 
                   children:
                   [
-                    Text('Upload the image of the pet',style: TextStyle(fontSize: 15),),
+                    Text('Upload the image of the pet',style: TextStyle(fontSize: 15)),
                     Spacer(),
                     IconButton(
                       onPressed: () async {
@@ -353,7 +353,11 @@ class _PetInformationFormState extends State<PetInformationForm> {
                     }
 
                 },
-                child: Text('Submit'),
+                child: Text('Submit',style: TextStyle(color: Colors.black),),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.amber,side: BorderSide.none,shape: StadiumBorder()),
+
+
+
               ),
             ],
           ),

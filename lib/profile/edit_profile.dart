@@ -9,6 +9,9 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 class EditProfile extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser;
   EditProfile({super.key});
+  signout() async {
+    await FirebaseAuth.instance.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +72,18 @@ class EditProfile extends StatelessWidget {
               ),
               SizedBox(height: 30,),
               ElevatedButton(onPressed: (){},
-                  style:ElevatedButton.styleFrom(backgroundColor:Colors.amber ,side: BorderSide.none,shape: StadiumBorder()),
+                  style:ElevatedButton.styleFrom(backgroundColor:Colors.amber ,side: BorderSide.none,shape: StadiumBorder(),),
                   child: Text('Edit Profile',style: TextStyle(color: Colors.black),))
+
 
 
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (() => signout()),
+        child: Icon(Icons.login_rounded),
       ),
     );
   }

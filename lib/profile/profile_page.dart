@@ -15,7 +15,12 @@ class ProfileScreen extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser;
 
   signout() async {
-    await FirebaseAuth.instance.signOut();
+    try {
+      await FirebaseAuth.instance.signOut();
+      Get.snackbar("Logged Out!", "");
+    } catch (error) {
+      Get.snackbar("Logout Error", error.toString());
+    }
   }
 
   @override
@@ -78,18 +83,15 @@ class ProfileScreen extends StatelessWidget {
               ProfileMenuWidget(title: "Appointments",icon: LineAwesomeIcons.business_time,onPress: (){},),
               ProfileMenuWidget(title: "Logout",
                 icon: LineAwesomeIcons.alternate_sign_out,
-                onPress: (){
+                onPress: () async{
 
-                   (() => signout());
+                   await signout();
                    Get.snackbar("Profile Clicked!", "");
-                   // Navigator.of(context).popUntil((route) => route.isFirst);
-                   // Navigator.pushReplacement(
-                   //     context,
-                   //     MaterialPageRoute(builder: (context) => Login()),
-                   // );
+                   Navigator.of(context).popUntil((route) => route.isFirst);
 
 
-                },)
+                },),
+
 
             ],
           ),

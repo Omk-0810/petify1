@@ -3,10 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:petify/LostAndFound/lostAndFound.dart';
 import 'package:petify/authentication/wrapper.dart';
 import 'package:petify/dashboard/navBar.dart';
 import 'package:petify/model/pet_model.dart';
-import 'package:petify/dashboard/dog_adopt.dart';
+import 'package:petify/Veterinarian/vetInfo.dart';
 import 'package:petify/dashboard/cat_adopt.dart';
 import 'package:petify/dashboard/donation.dart';
 import 'package:petify/profile/profile_page.dart';
@@ -24,7 +25,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final user = FirebaseAuth.instance.currentUser;
   final _firestore = FirebaseFirestore.instance;
   List<Pet> pets = [];
-  String _selectedSpecies = 'All'; 
+  String _selectedSpecies = 'All';
+  int _selectedIndex=0;
 
 
   @override
@@ -47,6 +49,47 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       setState(() {}); // Update UI when pets list changes
     });
   }
+  Future<void> _getDogs() async {
+    Stream<QuerySnapshot<Map<String, dynamic>>> petsStream =
+    _firestore.collection('pets').where('species'.toLowerCase(),isEqualTo:'Dog').snapshots();
+
+    // Listen to the stream and update the pets list
+    petsStream.listen((snapshot) {
+      pets = snapshot.docs.map((doc) => Pet.fromMap(doc.data())).toList();
+      setState(() {});
+      // Update UI when pets list changes
+    });
+  }
+  Future<void> _getCats() async {
+    Stream<QuerySnapshot<Map<String, dynamic>>> petsStream =
+    _firestore.collection('pets').where('species'.toLowerCase(),isEqualTo:'Cat').snapshots();
+
+    petsStream.listen((snapshot) {
+      pets = snapshot.docs.map((doc) => Pet.fromMap(doc.data())).toList();
+      setState(() {});
+    });
+  }
+
+  void _onTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      switch (_selectedIndex) {
+        case 0:
+          break;
+
+        case 1:
+          Get.to(LostAndFound());
+          break;
+
+        case 2:
+          Get.to(VetInfo());
+          break;
+      }
+    });
+  }
+
+
+
 
 
   signout() async {
@@ -54,15 +97,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
   void _navigateToSpeciesPage(String selectedSpecies) {
     if (selectedSpecies == 'Dog') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DogAdopt()),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => DogAdopt()),
+      // );
+      setState(() {
+        _getDogs();
+      });
     } else if (selectedSpecies == 'Cat') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CatAdopt()),
-      );
+      setState(() {
+        _getCats();
+      });
     }
     else if (selectedSpecies == 'All') {
       Navigator.push(
@@ -82,10 +127,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       drawer: NavBar(),
       appBar: AppBar(
 
-        // leading: const Icon(
-        //   Icons.menu,
-        //   color: Colors.black,
-        // ),
+
         title: Text(
           "Petify",
           style: GoogleFonts.kaushanScript().copyWith(fontSize: 30),
@@ -100,12 +142,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 borderRadius: BorderRadius.circular(10), color: Colors.white70),
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
-                );
+                Get.to(ProfileScreen());
               },
-              icon: imageIcon,
+              icon: Image.asset('assets/images/profile.webp'),
             ),
           )
         ],
@@ -193,6 +232,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
         ),
       ),
+      bottomNavigationBar:  BottomNavigationBar(
+
+
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.pets) ,label: "Donate & Adopt"),
+          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: "Lost & Found"),
+          BottomNavigationBarItem(icon: Icon(Icons.health_and_safety_outlined) ,label: " Veterinarian"),
+
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onTapped,
+      ),
+
 
     );
   }
@@ -233,6 +286,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       height:200,
                       width: 150,
                       margin: EdgeInsets.only(top:40,bottom: 20),
+                      padding: EdgeInsets.only(top:20),
                       decoration: BoxDecoration(color: Colors.white,
 
                           borderRadius: BorderRadius.only(
@@ -274,8 +328,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ],
               )),
             ],
+
           ),
-          Divider()
+          Container(margin:EdgeInsets.symmetric(horizontal: 15),height: 1,color: Colors.grey,)
         ],
       ),
     );}

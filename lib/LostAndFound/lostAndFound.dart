@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:petify/LostAndFound/lostAndFoundForm.dart';
 import 'package:petify/dashboard/navBar.dart';
 import 'package:petify/dashboard/onBoarding.dart';
@@ -21,28 +24,15 @@ class _LostAndFoundState extends State<LostAndFound> {
   final user = FirebaseAuth.instance.currentUser;
   final _firestore = FirebaseFirestore.instance;
   List<LostFound> pets = [];
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
+  String labelText='';
 
   @override
   void initState() {
     super.initState();
-    // _fetchPets();
     _onItemTapped(_selectedIndex);
-    // Call data fetching function on initialization
   }
 
-  Future<void> _fetchPets() async {
-    // Stream to listen for changes in the pets collection
-    Stream<QuerySnapshot<Map<String, dynamic>>> petsStream =
-        _firestore.collection('LostAndFound').snapshots();
-
-    // Listen to the stream and update the pets list
-    petsStream.listen((snapshot) {
-      pets = snapshot.docs.map((doc) => LostFound.fromMap(doc.data())).toList();
-
-      setState(() {}); // Update UI when pets list changes
-    });
-  }
 
   signout() async {
     await FirebaseAuth.instance.signOut();
@@ -52,6 +42,14 @@ class _LostAndFoundState extends State<LostAndFound> {
       _selectedIndex = index;
       switch (_selectedIndex) {
         case 0:
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WelcomeScreen()),
+          );
+
+          break;
+        case 1:
+          labelText='Lost Pets...';
           Stream<QuerySnapshot<Map<String, dynamic>>> petsStream =
           _firestore.collection('LostAndFound').snapshots();
           Get.snackbar("Lost!", "");
@@ -66,7 +64,8 @@ class _LostAndFoundState extends State<LostAndFound> {
           });
 
           break;
-        case 1:
+        case 2:
+          labelText='Found Pets...';
 
           Stream<QuerySnapshot<Map<String, dynamic>>> petsStream =
           _firestore.collection('LostAndFound').snapshots();
@@ -93,6 +92,11 @@ class _LostAndFoundState extends State<LostAndFound> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
+
+        // leading: const Icon(
+        //   Icons.menu,
+        //   color: Colors.black,
+        // ),
         title: Text(
           "Petify",
           style: GoogleFonts.kaushanScript().copyWith(fontSize: 30),
@@ -107,12 +111,10 @@ class _LostAndFoundState extends State<LostAndFound> {
                 borderRadius: BorderRadius.circular(10), color: Colors.white70),
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WelcomeScreen()),
-                );
+                Get.back();
               },
-              icon: Icon(Icons.home),
+              icon: Image.asset('assets/images/profile.webp')
+              ,
             ),
           )
         ],
@@ -125,15 +127,8 @@ class _LostAndFoundState extends State<LostAndFound> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(labelText, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), // Display the label
 
-              const SizedBox(
-                height: 25,
-              ),
-
-              //categories
-              const SizedBox(
-                height: 15,
-              ),
               Stack(children: [
                 ListView.builder(
                   shrinkWrap: true,
@@ -156,9 +151,10 @@ class _LostAndFoundState extends State<LostAndFound> {
 
 
           items: const [
-            BottomNavigationBarItem(icon: Opacity(opacity:0.0,child: Text('Lost',style: TextStyle(color:Colors.black),)), label: "Lost"),
+            BottomNavigationBarItem(icon: Icon(Icons.pets), label: "Donate & Adopt"),
+            BottomNavigationBarItem(icon: Icon(LineAwesomeIcons.search), label: "Lost"),
             BottomNavigationBarItem(
-                icon: Opacity(opacity:0.0,child: Text('Found',style: TextStyle(color:Colors.black),)), label: "Found"),
+                icon: Icon(LineAwesomeIcons.lightbulb_1), label: "Found"),
           ],
        currentIndex: _selectedIndex,
        selectedItemColor: Colors.amber[800],
@@ -171,87 +167,98 @@ class _LostAndFoundState extends State<LostAndFound> {
   }
 
   Widget buildPetContainer(LostFound pet) {
-    return Container(
+    return Column(
+      children: [
+        Container(
 
-      // height: 240,
-
-      margin: EdgeInsets.symmetric(horizontal: 20),
-
-      child: Row(
-        children: [
-          Expanded(
-              child: Stack(
+          // height: 240,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
             children: [
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                height: 200,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Align(
-                  child: Image.network(
-                    pet.imageUrl,
-                    height: 180,
-                    width: 180,
-                    fit: BoxFit.cover,
+              Expanded(
+                  child: Stack(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    height: 200,
+                    decoration: BoxDecoration(color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            bottomLeft: Radius.circular(20)
+                        )
+                    ),
+                    child: Align(
+                      child: Image.network(
+                        pet.imageUrl,
+                        height: 180,
+                        width: 180,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ],
-          )),
-          Expanded(
-              child: Stack(
-            children: [
-              Container(
-                  height: 200,
-                  width: 150,
-                  margin: EdgeInsets.only(top: 40, bottom: 20),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 50),
-                      Text(
-                        pet.casee,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 5),
+                ],
+              )),
+              Expanded(
+                  child: Stack(
+                children: [
+                  Container(
+                      height: 200,
+                      width: 150,
+                      margin: EdgeInsets.only(top: 40, bottom: 20),
+                      decoration: BoxDecoration(color: Colors.white,
 
-                      Text(
-                        pet.breed,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Row(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20),
+                              bottomRight: Radius.circular(20)
+                          )),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(Icons.location_on),
+                          SizedBox(height: 50),
                           Text(
-                            "  ${pet.address} ",
+                            pet.casee,
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 13,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
+                          SizedBox(height: 5),
 
-                    ],
-                  )),
+                          Text(
+                            pet.breed,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Icon(Icons.location_on),
+                              Flexible(
+                                child: Text(
+                                  "  ${pet.address} ",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+
+                        ],
+                      )),
+                ],
+              ))
             ],
-          ))
-        ],
-      ),
+          ),
+        ),
+        Container(height: 1,color: Colors.grey,)
+      ],
     );
   }
 }

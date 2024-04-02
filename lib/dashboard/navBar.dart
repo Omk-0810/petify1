@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:petify/LostAndFound/lostAndFoundForm.dart';
 import 'package:petify/dashboard/donation.dart';
 import 'package:petify/LostAndFound/lostAndFound.dart';
@@ -31,22 +32,14 @@ class _NavBarState extends State<NavBar> {
                 ),
                   title: Text('Donate pet'),
                  onTap: (){
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PetInformationForm()),
-
-                );
+                Get.to(PetInformationForm());
                 }
                             ),
                 ListTile(
                     leading: Icon(Icons.pets),
                     title: Text('Submit Lost/Found pet',style: TextStyle(),),
                     onTap: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LostAndFoundForm()),
-
-                      );
+                      Get.to(LostAndFoundForm());
                     }        ),
 
                 ListTile(
@@ -57,11 +50,7 @@ class _NavBarState extends State<NavBar> {
                     ),
                     title: Text('Lost & Found'),
                     onTap: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LostAndFound()),
-
-                      );
+                      Get.to(LostAndFound());
                     }        ),
 
                           ListTile(

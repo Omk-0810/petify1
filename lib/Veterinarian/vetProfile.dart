@@ -6,14 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:petify/Veterinarian/apply.dart';
 import 'package:petify/appointment/viewAppointments.dart';
-import 'package:petify/authentication/login.dart';
 import 'package:petify/profile/edit_profile.dart';
-import 'package:petify/authentication/wrapper.dart';
-import 'package:petify/dashboard/onBoarding.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreenVet extends StatelessWidget {
 
-  ProfileScreen({super.key});
+  ProfileScreenVet({super.key});
   final user = FirebaseAuth.instance.currentUser;
 
   signout() async {
@@ -58,46 +55,36 @@ class ProfileScreen extends StatelessWidget {
             children: [
               SizedBox(width: 120,
                 height: 120,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),child: Image(image: AssetImage('assets/images/profile.webp'),),
-              ),),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),child: Image(image: AssetImage('assets/images/profile.webp'),),
+                ),),
               const SizedBox(height: 10),
               Text('${user!.email}'),
               const SizedBox(height: 10),
               SizedBox(width: 200,
                   child: ElevatedButton(
                     onPressed: (){
-                      Get.to(EditProfile());
-                      },
+                     Get.to(EditProfile());
+                     },
                     child: Text('Edit profile',style:TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(backgroundColor:Colors.black,side: BorderSide.none,shape: StadiumBorder() ),
+                    style: ElevatedButton.styleFrom(backgroundColor:Colors.black,side: BorderSide.none,shape: StadiumBorder() ),
 
-              )),
+                  )),
               SizedBox(height: 30),
               Divider(),
               SizedBox(height: 10),
 
               ProfileMenuWidget(title: "settings",icon: LineAwesomeIcons.cog,onPress: (){},),
-              ProfileMenuWidget(title: "Adoptions",icon: LineAwesomeIcons.hand_holding,onPress: (){},),
-              ProfileMenuWidget(title: "Donations",icon: LineAwesomeIcons.donate,onPress: (){},),
-              ProfileMenuWidget(title: "Appointments",icon: LineAwesomeIcons.business_time,onPress: (){Get.to(ViewAppointments());},),
-              ProfileMenuWidget(title: "Apply as a veterinarian",icon: Icons.health_and_safety_outlined,onPress: (){Get.to(ApplyVet());},),
+              ProfileMenuWidget(title: "Delete profile",icon: Icons.delete,onPress: (){}),
               ProfileMenuWidget(title: "Logout",
                 icon: LineAwesomeIcons.alternate_sign_out,
                 onPress: () async{
-
-                   await signout();
-                   Get.snackbar("Profile Clicked!", "");
-                   Navigator.of(context).popUntil((route) => route.isFirst);
-
-
+                await signout();
+                  Get.snackbar("Profile Clicked!", "");
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                 },),
-
-
             ],
           ),
-
-
         ),
       ),
     );
@@ -121,24 +108,24 @@ class ProfileMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: onPress,
-      leading: Container(
-        width: 30,height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
+        onTap: onPress,
+        leading: Container(
+          width: 30,height: 30,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
 
+          ),
+          child: Icon(icon,color: Colors.blueAccent,),
         ),
-        child: Icon(icon,color: Colors.blueAccent,),
-      ),
-      title: Text(title,),
-      trailing:
-      endIcon? Container(
-        width: 30,height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
+        title: Text(title,),
+        trailing:
+        endIcon? Container(
+            width: 30,height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
 
-        ),
-        child: Icon(LineAwesomeIcons.angle_right,color: Colors.blueAccent,)):null
+            ),
+            child: Icon(LineAwesomeIcons.angle_right,color: Colors.blueAccent,)):null
     );
   }
 }

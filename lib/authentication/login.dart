@@ -102,16 +102,6 @@ class _LoginState extends State<Login> {
                 ),
                 SizedBox(child: Spacer()),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text('Veterinarian?'),
-                    TextButton(onPressed: (()=>Get.to(ForgotPass())), child: Text("Login here")),
-
-                  ],
-                ),
-                SizedBox(child: Spacer()),
               ],
             ),
           ),

@@ -52,7 +52,7 @@ class _WrapperState extends State<Wrapper> {
 
   Widget getWidgetForRole(String role) {
     switch (role) {
-      case 'admin':
+      case 'veterinarian':
         return VetDashBoard(); // Replace with admin-specific widget
       case 'user':
         return WelcomeScreen(); // Replace with user-specific widget

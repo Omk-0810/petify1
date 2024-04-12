@@ -80,84 +80,6 @@ class _VetDashBoardState extends State<VetDashBoard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //categories
-                SizedBox(
-                  width: double.infinity,
-                  height: 80,
-                  child: ListView(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 90,
-                            height: 80,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.black),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => PetInformationForm()),
-                                      );
-
-                                    },
-                                    icon: Image.asset(
-                                      'assets/images/donate.png',
-                                      width: 40,
-                                      height: 40,
-                                    )),
-                                // SizedBox(height: 5),
-
-                                Text(
-                                  "Edit appointments",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 10),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            width: 90,
-                            height: 80,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.black),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(
-                                      'assets/images/support.jpg',
-                                      width: 40,
-                                      height: 40,
-                                    )),
-                                // SizedBox(height: 5),
-
-                                Text(
-                                  "Help & Support",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 10),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -208,6 +130,23 @@ class _VetDashBoardState extends State<VetDashBoard> {
                                         onTap: (){
                                           Get.to(()=> ViewDetails(vet: data[index],));
                                         },
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min, // Control the width of the trailing section
+                                          children: [
+                                            IconButton(
+                                              icon: Icon(Icons.edit),
+                                              onPressed: () {
+                                                // Handle edit icon press
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.delete),
+                                              onPressed: () {
+                                                // Handle delete icon press
+                                              },
+                                            ),
+                                          ],
+                                        ),
 
                                       ),
                                     );

@@ -250,7 +250,7 @@ class _PetInformationFormState extends State<PetInformationForm> {
                 height: 50,
                 width: 10,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10), color: Colors.white70),
+                    borderRadius: BorderRadius.circular(10)),
                 child: Row(
 
                   children:
@@ -299,10 +299,7 @@ class _PetInformationFormState extends State<PetInformationForm> {
                   ],
                 ),
               ),
-              // ElevatedButton(
-              //   onPressed: _getImage,
-              //   child: Text('Select Image'),
-              // ),
+
               _image != null
                   ? Image.file(
                 _image!,
@@ -313,7 +310,6 @@ class _PetInformationFormState extends State<PetInformationForm> {
               :SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                  print(imageUrl);
                   if (imageUrl.isEmpty) {
                     Get.snackbar('Error', 'please upload an image');
                     return;
@@ -321,7 +317,7 @@ class _PetInformationFormState extends State<PetInformationForm> {
                   try {
 
                       // Add data to Firebase Firestore
-                      await FirebaseFirestore.instance.collection('pets').add({
+                      final docRef=await FirebaseFirestore.instance.collection('pets').add({
                         'userId':currentUserId,
                         'petName': _petName,
                         'species':_species,
@@ -330,6 +326,8 @@ class _PetInformationFormState extends State<PetInformationForm> {
                         'age': _age,
                         'imageUrl': imageUrl,
                       });
+                      await docRef.update({'petId': docRef.id});
+
 
                       showDialog(
                         context: context,

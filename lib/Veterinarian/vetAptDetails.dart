@@ -38,6 +38,7 @@ class _ViewDetailsState extends State<ViewDetails> {
         actions: [
           Container(
             margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10), color: Colors.white70),
             child: IconButton(
@@ -62,7 +63,7 @@ class _ViewDetailsState extends State<ViewDetails> {
           SizedBox(height: 10,),
             Text('Contact no: ${vet?['aptContact']}',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w300),),
           SizedBox(height: 10,),
-          Text('Appointment time: ${vet?['aptDay']}'+'  ${vet?['aptDay']}',style: TextStyle(fontSize: 15,),), SizedBox(height: 10,),
+          Text('Appointment time: ${vet?['aptDay']}'+'  ${vet?['aptTime']}',style: TextStyle(fontSize: 15,),), SizedBox(height: 10,),
             Text('Description : ${vet?['aptMessage']}',style: TextStyle(fontSize: 15,),),
         ]
         ),

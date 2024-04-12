@@ -7,9 +7,13 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:petify/Veterinarian/apply.dart';
 import 'package:petify/appointment/viewAppointments.dart';
 import 'package:petify/authentication/login.dart';
+import 'package:petify/profile/donationDetails.dart';
 import 'package:petify/profile/edit_profile.dart';
 import 'package:petify/authentication/wrapper.dart';
 import 'package:petify/dashboard/onBoarding.dart';
+import 'package:petify/profile/requestDetails.dart';
+import 'package:petify/profile/sentRequest.dart';
+import 'package:petify/profile/showRequests.dart';
 
 class ProfileScreen extends StatelessWidget {
 
@@ -77,17 +81,17 @@ class ProfileScreen extends StatelessWidget {
               Divider(),
               SizedBox(height: 10),
 
-              ProfileMenuWidget(title: "settings",icon: LineAwesomeIcons.cog,onPress: (){},),
               ProfileMenuWidget(title: "Adoptions",icon: LineAwesomeIcons.hand_holding,onPress: (){},),
-              ProfileMenuWidget(title: "Donations",icon: LineAwesomeIcons.donate,onPress: (){},),
+              ProfileMenuWidget(title: "Donations",icon: LineAwesomeIcons.donate,onPress: (){Get.to(DonationDetails());},),
+              ProfileMenuWidget(title: "Requests ",icon: LineAwesomeIcons.envelope,onPress: (){Get.to(SentRequestScreen());},),
               ProfileMenuWidget(title: "Appointments",icon: LineAwesomeIcons.business_time,onPress: (){Get.to(ViewAppointments());},),
               ProfileMenuWidget(title: "Apply as a veterinarian",icon: Icons.health_and_safety_outlined,onPress: (){Get.to(ApplyVet());},),
+
               ProfileMenuWidget(title: "Logout",
                 icon: LineAwesomeIcons.alternate_sign_out,
                 onPress: () async{
 
                    await signout();
-                   Get.snackbar("Profile Clicked!", "");
                    Navigator.of(context).popUntil((route) => route.isFirst);
 
 
@@ -128,7 +132,7 @@ class ProfileMenuWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
 
         ),
-        child: Icon(icon,color: Colors.blueAccent,),
+        child: Icon(icon,color: Colors.black,),
       ),
       title: Text(title,),
       trailing:
@@ -138,7 +142,7 @@ class ProfileMenuWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
 
         ),
-        child: Icon(LineAwesomeIcons.angle_right,color: Colors.blueAccent,)):null
+        child: Icon(LineAwesomeIcons.angle_right,color: Colors.black,)):null
     );
   }
 }

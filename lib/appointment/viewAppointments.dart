@@ -77,10 +77,14 @@ class _ViewAppointmentsState extends State<ViewAppointments> {
               final appointmentDay = appointment['aptDay'];
               final appointmentTime = appointment['aptTime'];
 
-              return ListTile(
-                leading: CircleAvatar(child: Image.asset('assets/images/support.jpg')),
-                title: Text(veterinarianName),
-                subtitle: Text(appointmentDay +' '+appointmentTime),
+              return Container(
+                decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(15)),
+                margin: EdgeInsets.all(15),
+                child: ListTile(
+                  leading: CircleAvatar(child: Image.asset('assets/images/support.jpg')),
+                  title: Text(veterinarianName),
+                  subtitle: Text(appointmentDay +' '+appointmentTime),
+                ),
               );
             },
           );

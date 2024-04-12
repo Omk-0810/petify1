@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:petify/LostAndFound/lostAndFound.dart';
 import 'package:petify/authentication/wrapper.dart';
 import 'package:petify/dashboard/navBar.dart';
+import 'package:petify/dashboard/petDetails.dart';
 import 'package:petify/model/pet_model.dart';
 import 'package:petify/Veterinarian/vetInfo.dart';
 import 'package:petify/dashboard/cat_adopt.dart';
@@ -116,6 +118,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       );
     }
   }
+
+  void navigateToPetDetails(Pet pet) {
+    Get.to(PetDetailsPage(pet: pet)); // Assuming PetDetailsPage is the target page
+  }
+
 
   // final Pet pet;
 
@@ -257,77 +264,81 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(child: Stack(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 20),
-                    height:200,
-                    decoration: BoxDecoration(color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            bottomLeft: Radius.circular(20)
+          GestureDetector(
+            child: Row(
+              children: [
+                Expanded(child: Stack(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20),
+                      height:200,
+                      decoration: BoxDecoration(color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              bottomLeft: Radius.circular(20)
+                          )
+                      ),
+                      child: Align(
+                        child:Image.network(pet.imageUrl,height: 180,width: 180,fit: BoxFit.cover,),
+                      ),
+
+                    ),
+
+
+                  ],
+
+                )),
+                Expanded(child: Stack(
+                  children: [
+                    Container(
+                        height:200,
+                        width: 150,
+                        margin: EdgeInsets.only(top:40,bottom: 20),
+                        padding: EdgeInsets.only(top:20),
+                        decoration: BoxDecoration(color: Colors.white,
+
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20),
+                                bottomRight: Radius.circular(20)
+                            )),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+
+                          children: [
+                            SizedBox(height: 30),
+                            Text(
+                              pet.name,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              "${pet.age} months old",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              pet.breed,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         )
                     ),
-                    child: Align(
-                      child:Image.network(pet.imageUrl,height: 180,width: 180,fit: BoxFit.cover,),
-                    ),
+                  ],
+                )),
+              ],
 
-                  ),
-
-
-                ],
-
-              )),
-              Expanded(child: Stack(
-                children: [
-                  Container(
-                      height:200,
-                      width: 150,
-                      margin: EdgeInsets.only(top:40,bottom: 20),
-                      padding: EdgeInsets.only(top:20),
-                      decoration: BoxDecoration(color: Colors.white,
-
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(20),
-                              bottomRight: Radius.circular(20)
-                          )),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-
-                        children: [
-                          SizedBox(height: 30),
-                          Text(
-                            pet.name,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            "${pet.age} months old",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            pet.breed,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      )
-                  ),
-                ],
-              )),
-            ],
+            ),
+            onTap: () => navigateToPetDetails(pet), // Pass the current pet object
 
           ),
           Container(margin:EdgeInsets.symmetric(horizontal: 15),height: 1,color: Colors.grey,)

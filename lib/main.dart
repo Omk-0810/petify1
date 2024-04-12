@@ -19,7 +19,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      theme: ThemeData(brightness: Brightness.light),
+      theme: ThemeData(brightness: Brightness.light,
+        scaffoldBackgroundColor:Colors.grey[350],
+      ),
       darkTheme: ThemeData(brightness: Brightness.dark),
       themeMode: ThemeMode.system,
       title: 'Petify',

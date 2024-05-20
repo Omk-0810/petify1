@@ -1,11 +1,12 @@
 
-#petify
+#Petify: Your One-Stop Pet Care Platform
 
-This case study is based on flutter. I have use the firebase as the backend. The app includes the functionality of registration module which consist of signup,siginand forget password also i have added the feature that will keep login if u once logged in in app and if you want to log out you have to go to profile and click on the logout.
+Petify is a mobile application built with Flutter and firebase that empowers pet lovers and fosters a supportive pet community. It provides a comprehensive suite of features to:
 
-The new feature added in the app is "chat bot" to which you can ask questions about using the app,also you can ask safety tips ,and how to save resources.To use the chatbot click on the floating button in the dashboard and for the chatbot I have only added the basic questions we can also add as many questions and answers as we want.
-
-As there was no codebase provided to work with I tried to build the user interface same as given in the case study.
+Donate & adopt pet: Donate pet if you are no more can take care of it and intrested one can adopt your pet.
+Find your furry friend: Browse adoptable pets and give deserving animals a loving home.
+Help lost pets find their way back: Register lost pets, search for found pets, and reunite lost companions with their families.
+Manage your pet's well-being: Register as a veterinarian, allowing pet owners to book appointments and manage their pet's health
 
 
 ## Setup

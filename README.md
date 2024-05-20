@@ -50,7 +50,7 @@ To run the app, simply write.
 
 
 ## Download apk
-https://github.com/Omk-0810/case-study/blob/master/case_study.apk
+https://github.com/Omk-0810/case-study/blob/master/petify.apk
 
 
 

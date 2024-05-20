@@ -60,7 +60,17 @@ https://github.com/Omk-0810/case-study/blob/master/case_study.apk
 
 ## Screenshots
 
-![login](https://github.com/Omk-0810/case-study/blob/master/Screenshots/signin.jpeg)
-![signup](https://github.com/Omk-0810/case-study/blob/master/Screenshots/signup.jpeg)
-![dashboard](https://github.com/Omk-0810/case-study/blob/master/Screenshots/dashboard.jpeg)
-![chatbot](https://github.com/Omk-0810/case-study/blob/master/Screenshots/chatbot.jpeg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/createAccount.jpg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/homepage.jpg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/adopt.jpg)
+![](https://github.com/Omk-0810/case-study/blob/master/Screenshots/signup.jpeg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/adoptionReq.jpg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/bookAppointment.jpg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/editProfile.jpg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/reqDetails.jpg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/showAppointments.jpg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/showVet.jpg)
+![](https://github.com/Omk-0810/petify1/blob/master/screenshots/upload.jpg)
+
+
+

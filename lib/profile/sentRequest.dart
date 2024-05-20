@@ -94,16 +94,16 @@ class _SentRequestScreenState extends State<SentRequestScreen> {
                     return Text('Error: ${snapshot
                         .error}'); // Handle error gracefully
                   }
+                  print(snapshot);
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
                   }
 
 
-                  final petData = snapshot.data?.data() as Map<
-                      String,
-                      dynamic>;
+                  final petData = snapshot.data?.data() as Map<String, dynamic>?;
                   final petName = petData?['petName'];
+                  print(petName);
 
                   return Container(
                     decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(15)),

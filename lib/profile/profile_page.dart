@@ -63,7 +63,8 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(width: 120,
                 height: 120,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),child: Image(image: AssetImage('assets/images/profile.webp'),),
+                borderRadius: BorderRadius.circular(100),
+                child: Image(image: AssetImage('assets/images/profile.webp'),),
               ),),
               const SizedBox(height: 10),
               Text('${user!.email}'),

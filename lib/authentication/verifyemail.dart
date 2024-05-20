@@ -23,7 +23,8 @@ class _VerifyState extends State<Verify> {
     });
   }
   reload()async{
-    await FirebaseAuth.instance.currentUser!.reload().then((value) => {Get.offAll(Wrapper())});
+    await FirebaseAuth.instance.currentUser!.reload().then((value) => {
+      Get.offAll(Wrapper())});
   }
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(

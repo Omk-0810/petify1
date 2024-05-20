@@ -29,7 +29,7 @@ class _VetDashBoardState extends State<VetDashBoard> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
 
   Future<QuerySnapshot<Map<String, dynamic>>>_getAppointments() async {
-   return await FirebaseFirestore.instance.collection('appointments').get();
+   return await FirebaseFirestore.instance.collection('appointments').where('aptWith',isEqualTo: currentUser?.uid).get();
 
   }
 
@@ -121,34 +121,24 @@ class _VetDashBoardState extends State<VetDashBoard> {
                                     final AptByName = appointment['aptName'];
 
 
-                                    return GestureDetector(
-                                      child: ListTile(
-                                        leading: Icon(Icons.supervised_user_circle_outlined),
-                                        title: Text(AptByName),
-                                        subtitle: Text(appointmentDay + ' ' +
-                                            appointmentTime),
-                                        onTap: (){
-                                          Get.to(()=> ViewDetails(vet: data[index],));
-                                        },
-                                        trailing: Row(
-                                          mainAxisSize: MainAxisSize.min, // Control the width of the trailing section
-                                          children: [
-                                            IconButton(
-                                              icon: Icon(Icons.edit),
-                                              onPressed: () {
-                                                // Handle edit icon press
-                                              },
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.delete),
-                                              onPressed: () {
-                                                // Handle delete icon press
-                                              },
-                                            ),
-                                          ],
+                                    return Container(
+                                      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(15)),
+                                      margin: EdgeInsets.all(10),
+
+                                      child: GestureDetector(
+                                        child: ListTile(
+                                          leading: Icon(Icons.supervised_user_circle_outlined),
+                                          title: Text(AptByName),
+                                          subtitle: Text(appointmentDay + ' ' +
+                                              appointmentTime),
+                                          onTap: (){
+                                            Get.to(()=> ViewDetails(vet: data[index],));
+                                          },
+
+                                          ),
+
                                         ),
 
-                                      ),
                                     );
                                   },
                                 );

@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:petify/authentication/login.dart';
 import 'package:petify/authentication/wrapper.dart';
 class ForgotPass extends StatefulWidget {
   const ForgotPass({super.key});
@@ -15,6 +17,7 @@ class _ForgotPassState extends State<ForgotPass> {
   TextEditingController password=TextEditingController();
   forgetPass()async{
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text);
+    Get.to(Login());
   }
   @override
   Widget build(BuildContext context) {

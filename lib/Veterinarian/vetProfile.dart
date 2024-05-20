@@ -22,6 +22,47 @@ class ProfileScreenVet extends StatelessWidget {
     }
   }
 
+  Future<void> deleteVetProfile(BuildContext context) async {
+    try {
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please sign in to delete your profile!')),
+        );
+        return;
+      }
+
+      final  userId = user!.uid;
+
+      await databaseReference.child('veterinarian/$userId').remove();
+
+      await databaseReference.child('users/$userId').update({'role': 'user'});
+
+      // Show confirmation dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text('Profile deleted successfully!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Go back to the previous screen
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      print('Error deleting profile: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting profile: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +116,29 @@ class ProfileScreenVet extends StatelessWidget {
               SizedBox(height: 10),
 
               ProfileMenuWidget(title: "settings",icon: LineAwesomeIcons.cog,onPress: (){},),
-              ProfileMenuWidget(title: "Delete profile",icon: Icons.delete,onPress: (){}),
+              ProfileMenuWidget(title: "Delete a veterinarian profile",icon: Icons.delete,
+                  onPress: () async {
+                    final confirmed =  await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Confirm Delete'),
+                        content: Text('Are you sure you want to delete your profile as a veterinarian?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: Text('Delete'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmed != null && confirmed) {
+                      await deleteVetProfile(context);
+                    }
+                  },),
               ProfileMenuWidget(title: "Logout",
                 icon: LineAwesomeIcons.alternate_sign_out,
                 onPress: () async{

@@ -104,20 +104,7 @@ class _LostAndFoundState extends State<LostAndFound> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: [
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: Colors.white70),
-            child: IconButton(
-              onPressed: () {
-                Get.back();
-              },
-              icon: Image.asset('assets/images/profile.webp')
-              ,
-            ),
-          )
-        ],
+
       ),
       backgroundColor: Colors.grey[350],
       body: SingleChildScrollView(

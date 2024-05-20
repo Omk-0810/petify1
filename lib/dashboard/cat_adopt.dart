@@ -169,7 +169,8 @@ class _CatAdoptState extends State<CatAdopt> {
               ),
 
 
-              Stack(children: [
+              Stack(
+                  children: [
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
